@@ -1,6 +1,6 @@
 import User from "../models/user.model.js";
 import messBill from "../models/messBilling.model.js";
-
+import { io } from "../index.js";
 // export const messbilling = async (req, res) => {
 //   try {
 //     const rollno = Number(req.params.rollno);
@@ -129,7 +129,13 @@ export const messbilling = async (req, res) => {
     }
 
     await bill.save();
+    
+    // console.log("-->>>",user._id.toString());
+    io.to(user._id.toString()).emit("new-bill", {
+      message: "New mess bill added"
+    });
 
+    // console.log("Realtime bill sent to:", user._id.toString());
     res.status(200).json({
       success: true,
       bill,

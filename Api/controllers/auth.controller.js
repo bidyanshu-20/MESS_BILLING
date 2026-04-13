@@ -214,7 +214,7 @@ export const handleForgotpassword = async (req, res) => {
             return res.status(404).json({ message: "User does not exit..." });
         }
         const otp = Math.floor(100000 + Math.random() * 999999);
-        console.log("Otp is ", otp);
+        // console.log("Otp is ", otp);
         const newOtp = new Otp({
             email,
             otp

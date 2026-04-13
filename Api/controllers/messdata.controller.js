@@ -1,5 +1,5 @@
 import messBill from "../models/messBilling.model.js";
-
+import User from "../models/user.model.js";
 // export const getUserMessBillByRollno = async (req, res) => {
 //   try {
 //     const rollno = Number(req.params.rollno); // ✅ convert
@@ -38,11 +38,12 @@ export const getUserMessBill = async (req, res) => {
 
     // console.log("Logged-in-user:", req.user); 
 
-    const bills = await messBill.find({ user: req.user._id });
+    const bills = await messBill.find({ user: req.user._id }).populate("user");
     // console.log("user mess bill ");
     // console.log(bills);
     res.status(200).json({
       user: {
+
         name: req.user.name,
         rollno: req.user.rollno,
         email: req.user.email,

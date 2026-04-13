@@ -1,273 +1,17 @@
-// import { useEffect, useState } from "react";
-// import jsPDF from "jspdf";
-// import html2canvas from "html2canvas";
 
-// const UserDashboard = () => {
-//   const [bills, setBills] = useState([]);
-//   const [loading, setLoading] = useState(true);
-//   const [error, setError] = useState("");
-//   const [userdata, setUserdata] = useState(null);
-
-//   // ✅ Year & Month states
-//   const currentDate = new Date();
-//   const [selectedYear, setSelectedYear] = useState(
-//     currentDate.getFullYear().toString()
-//   );
-//   const [selectedMonth, setSelectedMonth] = useState(
-//     (currentDate.getMonth() + 1).toString().padStart(2, "0")
-//   );
-
-//   useEffect(() => {
-//     const monthsForYear = bills
-//       .filter((bill) => bill.month.startsWith(selectedYear))
-//       .map((bill) => bill.month.split("-")[1]);
-
-//     if (monthsForYear.length > 0) {
-//       setSelectedMonth(monthsForYear[0]);
-//     }
-//   }, [selectedYear, bills]);
-
-
-//   useEffect(() => {
-//     const fetchBills = async () => {
-//       try {
-//         const token = localStorage.getItem("token");
-
-//         const res = await fetch("/api/user/messbill", {
-//           method: "GET",
-//           headers: {
-//             Authorization: `Bearer ${token}`,
-//             "Content-Type": "application/json",
-//           },
-//         });
-
-//         const data = await res.json();
-
-//         if (data.success && Array.isArray(data.bills)) {
-//           setBills(data.bills);
-//           setUserdata(data.user);
-//         } else {
-//           setBills([]);
-//         }
-//       } catch (err) {
-//         console.error(err);
-//         setError("Failed to load mess bills");
-//       } finally {
-//         setLoading(false);
-//       }
-//     };
-
-//     fetchBills();
-//   }, []);
-
-//   const logout = () => {
-//     localStorage.removeItem("token");
-//     window.location.href = "/";
-//   };
-
-//   const handleDownloadPdf = async (billId) => {
-//     console.log("I am Pdf convertor");
-//   };
-
-//   // ✅ Extract unique years
-//   const years = [
-//     ...new Set(bills.map((bill) => bill.month.split("-")[0])),
-//   ];
-
-//   // ✅ Filter bill by year + month
-//   const filteredBill = bills.find((bill) => {
-//     const [year, month] = bill.month.split("-");
-//     return year === selectedYear && month === selectedMonth;
-//   });
-
-//   if (loading) {
-//     return (
-//       <div className="min-h-screen bg-slate-900 text-white flex items-center justify-center">
-//         Loading...
-//       </div>
-//     );
-//   }
-
-//   if (error) {
-//     return (
-//       <div className="min-h-screen bg-slate-900 text-red-400 flex items-center justify-center">
-//         {error}
-//       </div>
-//     );
-//   }
-
-//   return (
-//     <div className="min-h-screen bg-slate-900 text-white p-6">
-//       {/* 🔹 TOP BAR */}
-//       <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8 gap-4">
-//         <h1 className="text-2xl font-bold">
-//           👋 Welcome,{" "}
-//           <span className="text-orange-400">
-//             {userdata?.name}
-//           </span>
-//         </h1>
-
-//         <button
-//           onClick={logout}
-//           className="bg-red-500 hover:bg-red-600 px-5 py-2 rounded-md font-semibold w-fit"
-//         >
-//           Sign Out
-//         </button>
-//       </div>
-
-//       {/* 🔹 USER INFO + FILTER */}
-//       <div className="flex justify-between items-start mb-10 flex-wrap gap-6">
-//         {/* USER DETAILS */}
-//         <div className="bg-slate-800 p-5 rounded-xl shadow-lg w-full max-w-sm">
-//           <h2 className="text-lg font-semibold mb-3 border-b border-slate-600 pb-2">
-//             👤 User Details
-//           </h2>
-
-//           <p className="text-sm mb-1">
-//             <span className="text-gray-400">Name:</span>{" "}
-//             {userdata?.name}
-//           </p>
-//           <p className="text-sm mb-1">
-//             <span className="text-gray-400">Roll No:</span>{" "}
-//             {userdata?.rollNo}
-//           </p>
-//           <p className="text-sm">
-//             <span className="text-gray-400">Email:</span>{" "}
-//             {userdata?.email}
-//           </p>
-//         </div>
-
-//         {/* 🔥 YEAR & MONTH FILTER */}
-//         <div className="flex gap-4 items-end flex-wrap">
-//           {/* YEAR */}
-//           <div>
-//             <label className="block text-sm mb-1 text-gray-400">
-//               Select Year
-//             </label>
-//             <select
-//               value={selectedYear}
-//               onChange={(e) => setSelectedYear(e.target.value)}
-//               className="bg-slate-700 px-4 py-2 rounded-lg"
-//             >
-//               {years.map((year) => (
-//                 <option key={year} value={year}>
-//                   {year}
-//                 </option>
-//               ))}
-//             </select>
-//           </div>
-
-//           {/* MONTH */}
-//           <div>
-//             <label className="block text-sm mb-1 text-gray-400">
-//               Select Month
-//             </label>
-//             <select
-//               value={selectedMonth}
-//               onChange={(e) => setSelectedMonth(e.target.value)}
-//               className="bg-slate-700 px-4 py-2 rounded-lg"
-//             >
-//               {[
-//                 "01", "02", "03", "04", "05", "06",
-//                 "07", "08", "09", "10", "11", "12"
-//               ].map((m, index) => (
-//                 <option key={m} value={m}>
-//                   {new Date(0, index).toLocaleString("en-US", {
-//                     month: "long",
-//                   })}
-//                 </option>
-//               ))}
-//             </select>
-//           </div>
-//         </div>
-//       </div>
-
-//       {/* 🔹 MESS BILL */}
-//       {!filteredBill ? (
-//         <p className="text-center text-gray-400">
-//           No mess bill available for selected month
-//         </p>
-//       ) : (
-//         <div
-//           id={`bill-${filteredBill._id}`}
-//           className="bg-slate-800 rounded-xl p-5 mb-6 shadow-lg"
-//         >
-//           {/* MONTH HEADER */}
-//           <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-4 gap-3">
-//             <div className="text-xl font-semibold">
-//               {new Date(`${filteredBill.month}-01`).toLocaleDateString(
-//                 "en-US",
-//                 { month: "long", year: "numeric" }
-//               )}
-//             </div>
-
-//             <span className="text-green-400 text-lg font-bold">
-//               Total: ₹{filteredBill.totalAmount}
-//             </span>
-
-//             <button
-//               onClick={() => handleDownloadPdf(filteredBill._id)}
-//               className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded"
-//             >
-//               Download PDF
-//             </button>
-//           </div>
-
-//           {/* DAYS TABLE */}
-//           <div className="overflow-x-auto">
-//             <table className="w-full text-sm border border-slate-700">
-//               <thead className="bg-slate-700">
-//                 <tr>
-//                   <th className="p-2 border">Date</th>
-//                   <th className="p-2 border">Breakfast</th>
-//                   <th className="p-2 border">Lunch</th>
-//                   <th className="p-2 border">Dinner</th>
-//                   <th className="p-2 border">Extras</th>
-//                   <th className="p-2 border">Total</th>
-//                 </tr>
-//               </thead>
-//               <tbody>
-//                 {filteredBill.days.map((day, index) => (
-//                   <tr
-//                     key={index}
-//                     className="text-center hover:bg-slate-700"
-//                   >
-//                     <td className="p-2 border">
-//                       {new Date(day.date).toLocaleDateString(
-//                         "en-IN"
-//                       )}
-//                     </td>
-//                     <td className="p-2 border">₹{day.breakfast}</td>
-//                     <td className="p-2 border">₹{day.lunch}</td>
-//                     <td className="p-2 border">₹{day.dinner}</td>
-//                     <td className="p-2 border">₹{day.extras}</td>
-//                     <td className="p-2 border text-green-400 font-semibold">
-//                       ₹{day.total}
-//                     </td>
-//                   </tr>
-//                 ))}
-//               </tbody>
-//             </table>
-//           </div>
-//         </div>
-//       )}
-//     </div>
-//   );
-// };
-
-// export default UserDashboard;
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import jsPDF from "jspdf";
 import autoTable from 'jspdf-autotable';
-
+import { io } from "socket.io-client";
+import { useRef } from "react";
 
 const UserDashboard = () => {
   const [bills, setBills] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [userdata, setUserdata] = useState(null);
-
+  const [userId, setUserId] = useState(null);
   const currentDate = new Date();
   const [selectedYear, setSelectedYear] = useState(currentDate.getFullYear().toString());
   const [selectedMonth, setSelectedMonth] = useState((currentDate.getMonth() + 1).toString().padStart(2, "0"));
@@ -283,44 +27,97 @@ const UserDashboard = () => {
   }, [selectedYear, bills]);
 
   const navigate = useNavigate();
-
-
+  const socket = useRef(null);
 
   useEffect(() => {
-    const fetchBills = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        const res = await fetch("/api/user/messbill", {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        });
+    socket.current = io("http://localhost:3400");
 
-        const data = await res.json();
-
-        if (data.success && Array.isArray(data.bills)) {
-          setBills(data.bills);
-          setUserdata(data.user);
-        } else {
-          setBills([]);
-        }
-      } catch (err) {
-        console.error(err);
-        setError("Failed to load mess bills");
-      } finally {
-        setLoading(false);
-      }
+    return () => {
+      socket.current.disconnect();
     };
+  }, []);
 
+
+  // useEffect(() => {
+  const fetchBills = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const res = await fetch("/api/user/messbill", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      const data = await res.json();
+
+      if (data.success && Array.isArray(data.bills)) {
+        setBills(data.bills);
+        setUserdata(data.user);
+        // console.log(data);
+        // console.log("->",  data.bills[0].user._id);
+        // console.log(":->",data.bills[0]?.user?._id)
+        // const user_id = data.bills[0].user._id;
+        if (data.bills[0]?.user?._id) {
+          setUserId(data.bills[0]?.user?._id);
+        }
+        // console.log("----->",data.user);
+      } else {
+        setBills([]);
+      }
+    } catch (err) {
+      console.error(err);
+      setError("Failed to load mess bills");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // fetchBills();
+  // }, []);
+  useEffect(() => {
     fetchBills();
   }, []);
 
-  // useEffect(()=>{
-  //   console.log("=====>",userdata)
-  //   console.log("---->",bills);
+  // useEffect(async () => {
+  //   // console.log("=====>", data.user)
+  //   // console.log("---->", bills);
+  //   const bills = await bills.find()
+  //     .populate("user");
+  //     console.log(bills)
   // })
+
+
+  // useEffect(() => {
+  //    if (!userId || !socket.current) return;
+  //   socket.emit("joinRoom", userId);
+  //   console.log("---->", userId);
+  //   socket.on("newBillAdded", (bill) => {
+  //     setBills((prev) => [...prev, bill]);
+  //   });
+
+  //   return () => {
+  //     socket.disconnect();
+  //   };
+  // }, [userId]);
+
+  useEffect(() => {
+    if (!userId || !socket.current) return;
+
+    socket.current.emit("joinRoom", userId);
+    console.log("Joined room:", userId);
+
+    socket.current.on("new-bill", () => {
+      console.log("New bill received!");
+      fetchBills();   // 🔥 realtime refresh
+    });
+
+    return () => {
+      socket.current.off("new-bill");
+    };
+
+  }, [userId]);
 
 
   const logout = () => {

@@ -227,8 +227,8 @@ const Login = () => {
               />
             </div>
 
-            {/* Password */}
-            <div>
+            {/* Password + Forgot link */}
+            <div className="space-y-2">
               <label htmlFor="password" className="block text-slate-300 font-medium mb-2">
                 Password
               </label>
@@ -240,9 +240,18 @@ const Login = () => {
                 className="w-full px-5 py-3.5 bg-slate-800/60 border border-slate-600 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/30 transition-all duration-300"
                 required
               />
+
+              <div className="text-right">
+                <button
+                  type="button"
+                  onClick={() => navigate('/reset/password')}
+                  className="text-amber-400 hover:text-amber-300 text-sm font-medium transition-colors hover:underline"
+                >
+                  Forgot password?
+                </button>
+              </div>
             </div>
-            
-            <div className="text-white cursor-pointer hover:text-white-400" onClick={()=>navigate('/reset/password')}>FORGOT PASSWORD</div>
+
             {/* Submit Button */}
             <button
               type="submit"
@@ -294,7 +303,7 @@ const Login = () => {
             </Link>
           </p>
 
-          {/* Optional subtle error display (besides toast) */}
+          {/* Optional subtle error display */}
           {error && (
             <p className="text-red-400 text-center mt-4 text-sm font-medium">
               {error}
