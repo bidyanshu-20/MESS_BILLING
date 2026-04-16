@@ -56,8 +56,8 @@ npm start
 
 ## 📸 Screenshot
 
-![Mess Billing Project](./assets/p1.png)
-![User Dashboard](./assets/p2.png)
-![Admin Panel](./assets/p3.png)
-![Billing Dashoard](./assets/p4.png)
+![Mess Billing Project](./client/src/assets/p1.png)
+![User Dashboard](./client/src/assets/p2.png)
+![Admin Panel](./client/src/assets/p3.png)
+![Billing Dashoard](./client/src/assets/p4.png)
 
