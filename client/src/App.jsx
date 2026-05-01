@@ -30,7 +30,7 @@ function App() {
         autoClose={3000}
         hideProgressBar={false}
       /> */}
-        {/* Required for toast notifications to appear */}
+      {/* Required for toast notifications to appear */}
       <ToastContainer
         position="bottom-right"
         autoClose={3000}
@@ -53,7 +53,7 @@ function App() {
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
         <Route path="/admin/user/:rollno" element={<AdminUserBill />} />
         <Route path="/edit-profile" element={<UpdateUser />} />
-        <Route path="/reset/password" element = {<ForgotPassword/>}/>
+        <Route path="/reset/password" element={<ForgotPassword />} />
       </Routes>
     </BrowserRouter>
   );

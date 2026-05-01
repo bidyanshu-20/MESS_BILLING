@@ -208,23 +208,29 @@ export const adminDeleteUser = async (req, res) => {
 
 export const handleForgotpassword = async (req, res) => {
     const { email } = req.body;
+    console.log("---->"+email);
     try {
         const user = await User.findOne({ email });
         if (!user) {
             return res.status(404).json({ message: "User does not exit..." });
         }
         const otp = Math.floor(100000 + Math.random() * 999999);
-        // console.log("Otp is ", otp);
+        console.log("Otp is ", otp);
         const newOtp = new Otp({
             email,
             otp
         })
+
+
         await newOtp.save();
+        console.log("-----hellooooo");
         const message = `Your verification code for password reset is ${otp}`
         await sendEmail(email, "Reset Password", message)
+        console.log("hellooooo");
         res.status(200).json({ message: "Otp sent your email" });
     }
     catch (error) {
+         console.error("Forgot Password Error:", error);
         res.status(500).json({ success: false, message: "Internal server Error..." })
     }
 }
