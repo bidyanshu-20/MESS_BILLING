@@ -14,6 +14,7 @@ import UpdateUser from "./pages/UpdateUser";
 import ForgotPassword from "./pages/ForgotPassword";
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from "react-toastify";
+import Footer from "./components/Footer";
 
 function App() {
   return (
@@ -61,6 +62,7 @@ function App() {
         <Route path="/admin/chat/:userId" element={<ChatWithUser />} />
         <Route path="/reset/password" element={<ForgotPassword />} />
       </Routes>
+      <Footer />
     </BrowserRouter>
   );   // /admin/chat/${user._id}
 }
