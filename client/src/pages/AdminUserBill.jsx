@@ -1,8 +1,7 @@
 
 import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-// import { io } from "socket.io-client";
-// import { Socket } from "socket.io-client";
+
 const AdminUserBill = () => {
   const { rollno } = useParams();
   const navigate = useNavigate();
@@ -13,6 +12,17 @@ const AdminUserBill = () => {
   const [days, setDays] = useState([]);
   const [savedBill, setSavedBill] = useState(null);
   const [userId, setUserId] = useState(null);
+
+
+  const [editIndex, setEditIndex] = useState(null);
+  const [editDay, setEditDay] = useState({
+    date: "",
+    breakfast: 0,
+    lunch: 0,
+    dinner: 0,
+    extras: 0,
+  });
+
   const addDay = () => {
     setDays([
       ...days,
@@ -30,12 +40,6 @@ const AdminUserBill = () => {
     navigate("/admin/dashboard");
   };
 
-  // const handleChange = (index, field, value) => {
-  //   const updated = [...days];
-  //   updated[index][field] = field === "date" ? value : Number(value);
-  //   setDays(updated);
-  // };
-
   const handleChange = (index, field, value) => {
     const updated = [...days];
 
@@ -48,6 +52,7 @@ const AdminUserBill = () => {
 
     setDays(updated);
   };
+
   const calculateDayTotal = (day) => {
     return (
       (day.breakfast || 0) +
@@ -56,12 +61,11 @@ const AdminUserBill = () => {
       (day.extras || 0)
     );
   };
+
   const fetchSavedBills = async () => {
     try {
       const token = localStorage.getItem("token");
-      const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
-      console.log("====>",BACKEND_URL)
       const res = await fetch(
         `/api/admin/messbill/${rollno}?month=${month}`,
         {
@@ -76,8 +80,7 @@ const AdminUserBill = () => {
 
       if (data.success && data.bills.length > 0) {
         setSavedBill(data.bills[0]);
-        // console.log('==========>'+data.bills[0].user);
-        setUserId(data.bills[0].user)
+        setUserId(data.bills[0].user);
       } else {
         setSavedBill(null);
       }
@@ -87,22 +90,102 @@ const AdminUserBill = () => {
   };
 
   useEffect(() => {
-    // if (rollno && month) {
     fetchSavedBills();
-    // }
-  }, [rollno, month])
+  }, [rollno, month]);
 
-  // useEffect(() => {
-  //   // console.log("Updated savedBill:", savedBill);
-  // }, [savedBill]);
+  const handleDelete = async (billId) => {
+    try {
+      const token = localStorage.getItem("token");
 
-  const handleDelete = (biilId) => {
-    console.log("i am delete handler");
-    console.log(biilId);
-  }
+      const res = await fetch(
+        `/api/messbill/month/${billId}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
-  // const socket = io("http://localhost:3400");
+      const data = await res.json();
 
+      if (data.success) {
+        alert("Bill deleted successfully");
+        setSavedBill(null);
+      } else {
+        alert(data.message);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleDeleteDay = async (dayId) => {
+    try {
+      const token = localStorage.getItem("token");
+
+      const res = await fetch(
+        `/api/messbill/day/${savedBill._id}/${dayId}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const data = await res.json();
+
+      if (data.success) {
+        alert("Day deleted successfully");
+        fetchSavedBills();
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleEditClick = (day, index) => {
+    setEditIndex(index);
+
+    setEditDay({
+      date: day.date.slice(0, 10),
+      breakfast: day.breakfast,
+      lunch: day.lunch,
+      dinner: day.dinner,
+      extras: day.extras,
+    });
+  };
+
+  const handleSaveEdit = async (dayId) => {
+    try {
+      const token = localStorage.getItem("token");
+
+      const res = await fetch(
+        `/api/messbill/${savedBill._id}/${dayId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(editDay),
+        }
+      );
+
+      const data = await res.json();
+
+      if (data.success) {
+        alert("Day updated successfully");
+
+        setEditIndex(null);
+
+        fetchSavedBills();
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   const saveBill = async () => {
     try {
@@ -117,13 +200,10 @@ const AdminUserBill = () => {
 
       if (data.success) {
         alert("Mess bill saved successfully");
+
         setSavedBill(data.bill);
-        // socket.emit("billAdded", {
-        //   userId,
-        //   bill: savedBill
-        // });
-        // after saving bill
-        setDays([]); // optional reset
+
+        setDays([]);
       } else {
         alert("Failed to save bill");
       }
@@ -131,11 +211,6 @@ const AdminUserBill = () => {
       console.error(err);
     }
   };
-  // console.log("roll no is:",rollno);
-  // console.log(typeof rollno);
-  // ✅ FETCH SAVED BILL
-
-
 
   return (
     <div className="min-h-screen bg-slate-900 text-white px-3 sm:px-6 py-6">
@@ -156,8 +231,12 @@ const AdminUserBill = () => {
             <h2 className="text-xl sm:text-2xl font-bold">
               Mess Bill Management
             </h2>
+
             <p className="text-gray-400 text-sm">
-              Roll No: <span className="text-white font-semibold">{rollno}</span>
+              Roll No:
+              <span className="text-white font-semibold">
+                {" "} {rollno}
+              </span>
             </p>
           </div>
 
@@ -169,7 +248,7 @@ const AdminUserBill = () => {
           />
         </div>
 
-        {/* TABLE HEADER - Desktop */}
+        {/* TABLE HEADER */}
         <div className="hidden md:grid grid-cols-6 gap-4 text-gray-300 font-semibold mb-3">
           <span>Date</span>
           <span>Breakfast</span>
@@ -190,7 +269,9 @@ const AdminUserBill = () => {
                 type="date"
                 className="bg-slate-800 px-3 py-2 rounded-lg w-full"
                 value={day.date}
-                onChange={(e) => handleChange(index, "date", e.target.value)}
+                onChange={(e) =>
+                  handleChange(index, "date", e.target.value)
+                }
               />
 
               <input
@@ -198,7 +279,9 @@ const AdminUserBill = () => {
                 placeholder="Breakfast"
                 className="bg-slate-800 px-3 py-2 rounded-lg w-full"
                 value={day.breakfast}
-                onChange={(e) => handleChange(index, "breakfast", e.target.value)}
+                onChange={(e) =>
+                  handleChange(index, "breakfast", e.target.value)
+                }
               />
 
               <input
@@ -206,7 +289,9 @@ const AdminUserBill = () => {
                 placeholder="Lunch"
                 className="bg-slate-800 px-3 py-2 rounded-lg w-full"
                 value={day.lunch}
-                onChange={(e) => handleChange(index, "lunch", e.target.value)}
+                onChange={(e) =>
+                  handleChange(index, "lunch", e.target.value)
+                }
               />
 
               <input
@@ -214,7 +299,9 @@ const AdminUserBill = () => {
                 placeholder="Dinner"
                 className="bg-slate-800 px-3 py-2 rounded-lg w-full"
                 value={day.dinner}
-                onChange={(e) => handleChange(index, "dinner", e.target.value)}
+                onChange={(e) =>
+                  handleChange(index, "dinner", e.target.value)
+                }
               />
 
               <input
@@ -222,7 +309,9 @@ const AdminUserBill = () => {
                 placeholder="Extras"
                 className="bg-slate-800 px-3 py-2 rounded-lg w-full"
                 value={day.extras}
-                onChange={(e) => handleChange(index, "extras", e.target.value)}
+                onChange={(e) =>
+                  handleChange(index, "extras", e.target.value)
+                }
               />
 
               <div className="text-green-400 font-bold text-center md:text-left">
@@ -260,56 +349,186 @@ const AdminUserBill = () => {
         {savedBill && (
           <div className="mt-10 bg-slate-700 p-4 sm:p-6 rounded-xl">
 
+            {/* TOP */}
             <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg sm:text-xl font-bold">
-                Saved Bill - {savedBill.month}
-              </h3>
+
+              <div className="flex items-center gap-3">
+
+                <h3 className="text-lg sm:text-xl font-bold">
+                  Saved Bill - {savedBill.month}
+                </h3>
+
+                <span
+                  className={`px-3 py-1 rounded-full text-sm font-semibold
+                  ${savedBill.status === "paid"
+                      ? "bg-green-600/20 text-green-400"
+                      : "bg-red-600/20 text-red-400"
+                    }`}
+                >
+                  {savedBill.status}
+                </span>
+
+              </div>
 
               <button
                 onClick={() => handleDelete(savedBill._id)}
                 className="bg-rose-600 hover:bg-rose-700 px-4 py-2 rounded-lg text-sm"
               >
-                Delete
+                Delete Month
               </button>
             </div>
 
-            {/* Desktop Table */}
-            <div className="hidden md:grid grid-cols-6 gap-4 text-gray-300 font-semibold mb-3">
+            {/* TABLE HEADER */}
+            <div className="hidden md:grid grid-cols-8 gap-4 text-gray-300 font-semibold mb-3">
               <span>Date</span>
               <span>Breakfast</span>
               <span>Lunch</span>
               <span>Dinner</span>
               <span>Extras</span>
               <span>Total</span>
+              <span>Edit</span>
+              <span>Delete</span>
             </div>
 
-            {/* Mobile Cards */}
+            {/* DAY ROWS */}
             <div className="space-y-3">
+
               {savedBill.days.map((day, index) => (
+
                 <div
-                  key={index}
-                  className="bg-slate-800 rounded-lg p-3 grid grid-cols-2 md:grid-cols-6 gap-2"
+                  key={day._id}
+                  className="bg-slate-800 rounded-lg p-3 grid grid-cols-1 md:grid-cols-8 gap-3 items-center"
                 >
-                  <span className="col-span-2 md:col-span-1">
-                    {new Date(day.date).toISOString().slice(0, 10)}
-                  </span>
-                  <span> {day.breakfast}</span>
-                  <span> {day.lunch}</span>
-                  <span> {day.dinner}</span>
-                  <span>{day.extras}</span>
-                  <span className="text-green-400 font-bold">
-                    ₹ {day.total}
-                  </span>
+
+                  {editIndex === index ? (
+                    <>
+                      <input
+                        type="date"
+                        value={editDay.date}
+                        onChange={(e) =>
+                          setEditDay({
+                            ...editDay,
+                            date: e.target.value,
+                          })
+                        }
+                        className="bg-slate-700 px-2 py-2 rounded"
+                      />
+
+                      <input
+                        type="text"
+                        value={editDay.breakfast}
+                        onChange={(e) =>
+                          setEditDay({
+                            ...editDay,
+                            breakfast: Number(e.target.value),
+                          })
+                        }
+                        className="bg-slate-700 px-2 py-2 rounded"
+                      />
+
+                      <input
+                        type="text"
+                        value={editDay.lunch}
+                        onChange={(e) =>
+                          setEditDay({
+                            ...editDay,
+                            lunch: Number(e.target.value),
+                          })
+                        }
+                        className="bg-slate-700 px-2 py-2 rounded"
+                      />
+
+                      <input
+                        type="text"
+                        value={editDay.dinner}
+                        onChange={(e) =>
+                          setEditDay({
+                            ...editDay,
+                            dinner: Number(e.target.value),
+                          })
+                        }
+                        className="bg-slate-700 px-2 py-2 rounded"
+                      />
+
+                      <input
+                        type="text"
+                        value={editDay.extras}
+                        onChange={(e) =>
+                          setEditDay({
+                            ...editDay,
+                            extras: Number(e.target.value),
+                          })
+                        }
+                        className="bg-slate-700 px-2 py-2 rounded"
+                      />
+
+                      <span className="text-green-400 font-bold">
+                        ₹ {calculateDayTotal(editDay)}
+                      </span>
+
+                      <button
+                        onClick={() => handleSaveEdit(day._id)}
+                        className="bg-green-600 hover:bg-green-700 px-3 py-2 rounded"
+                      >
+                        Save
+                      </button>
+
+                      <button
+                        onClick={() => setEditIndex(null)}
+                        className="bg-gray-600 hover:bg-gray-700 px-3 py-2 rounded"
+                      >
+                        Cancel
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <span>
+                        {new Date(day.date)
+                          .toISOString()
+                          .slice(0, 10)}
+                      </span>
+
+                      <span>{day.breakfast}</span>
+
+                      <span>{day.lunch}</span>
+
+                      <span>{day.dinner}</span>
+
+                      <span>{day.extras}</span>
+
+                      <span className="text-green-400 font-bold">
+                        ₹ {day.total}
+                      </span>
+
+                      <button
+                        onClick={() =>
+                          handleEditClick(day, index)
+                        }
+                        className="bg-blue-600 hover:bg-blue-700 px-3 py-2 rounded"
+                      >
+                        Edit
+                      </button>
+
+                      <button
+                        onClick={() =>
+                          handleDeleteDay(day._id)
+                        }
+                        className="bg-rose-600 hover:bg-rose-700 px-3 py-2 rounded"
+                      >
+                        Delete
+                      </button>
+                    </>
+                  )}
                 </div>
               ))}
             </div>
 
+            {/* TOTAL */}
             <div className="text-right text-lg sm:text-xl font-bold text-yellow-400 mt-4">
               Monthly Total: ₹ {savedBill.totalAmount}
             </div>
           </div>
         )}
-
       </div>
     </div>
   );

@@ -22,6 +22,10 @@ const userSchema = new mongoose.Schema({
     role: {
         type: String,
         required: true,
+    },
+    profilePic: {
+        type: String,
+        default: "",
     }
 })
 const User = mongoose.model('Userdata', userSchema);

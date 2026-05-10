@@ -30,6 +30,13 @@ export const getAdminUserMessBill = async (req, res) => {
         // console.log("Bills is ----->",bills);
         res.status(200).json({
             success: true,
+            user: {
+                _id: user._id,
+                name: user.name,
+                email: user.email,
+                rollno: user.rollno,
+                role: user.role,
+            },
             bills,
         });
     } catch (error) {

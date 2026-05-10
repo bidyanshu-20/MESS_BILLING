@@ -46,6 +46,9 @@ const Login = () => {
       toast.success("Login successful 🎉");
       localStorage.setItem("token", data.token);
       localStorage.setItem("role", data.user.role);
+      localStorage.setItem("user", JSON.stringify(data.user));
+
+
 
       const role = data.user.role.toLowerCase();
       if (role === "admin") {
@@ -128,11 +131,10 @@ const Login = () => {
             <button
               type="submit"
               disabled={loading}
-              className={`w-full py-3.5 px-6 font-semibold text-lg rounded-xl shadow-lg transform transition-all duration-300 ${
-                loading
-                  ? "bg-slate-700 cursor-not-allowed"
-                  : "bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 hover:shadow-orange-500/40 hover:-translate-y-1 active:scale-[0.98]"
-              } text-white flex items-center justify-center gap-3`}
+              className={`w-full py-3.5 px-6 font-semibold text-lg rounded-xl shadow-lg transform transition-all duration-300 ${loading
+                ? "bg-slate-700 cursor-not-allowed"
+                : "bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 hover:shadow-orange-500/40 hover:-translate-y-1 active:scale-[0.98]"
+                } text-white flex items-center justify-center gap-3`}
             >
               {loading ? (
                 <>

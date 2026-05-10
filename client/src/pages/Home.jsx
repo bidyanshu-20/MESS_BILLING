@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import RuleBasedChatbot from "../components/RuleBasedChatbot";
 
 const Home = () => {
   return (
@@ -58,6 +59,7 @@ const Home = () => {
           ))}
         </div>
       </div>
+      <RuleBasedChatbot />
     </div>
   );
 };

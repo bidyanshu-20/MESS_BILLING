@@ -5,8 +5,11 @@ import Navbar from "./components/Navbar";
 import SignUp from "./pages/SignUp";
 import UserDashboard from "./pages/UserDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
+import AdminUserDetails from "./pages/AdminUserDetails";
 import MainLayout from "./layouts/MainLayout";
 import AdminUserBill from "./pages/AdminUserBill";
+import ChatWithAdmin from "./pages/ChatWithAdmin";
+import ChatWithUser from "./pages/ChatWithUser";
 import UpdateUser from "./pages/UpdateUser";
 import ForgotPassword from "./pages/ForgotPassword";
 import 'react-toastify/dist/ReactToastify.css';
@@ -51,12 +54,15 @@ function App() {
         </Route>
         <Route path="/user/dashboard/:rollno" element={<UserDashboard />} />
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
+        <Route path="/admin/user-details/:rollno" element={<AdminUserDetails />} />
         <Route path="/admin/user/:rollno" element={<AdminUserBill />} />
         <Route path="/edit-profile" element={<UpdateUser />} />
+        <Route path="/chat/admin" element={<ChatWithAdmin />} />
+        <Route path="/admin/chat/:userId" element={<ChatWithUser />} />
         <Route path="/reset/password" element={<ForgotPassword />} />
       </Routes>
     </BrowserRouter>
-  );
+  );   // /admin/chat/${user._id}
 }
 
 export default App;

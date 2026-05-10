@@ -122,7 +122,7 @@ messBillSchema.pre("save", function (next) {
 
   // next();
 });
-// 🔥 Prevent duplicate month for same user
+//  Prevent duplicate month for same user
 messBillSchema.index({ user: 1, month: 1 }, { unique: true });
 
 const MessBill = mongoose.model("MessBill", messBillSchema);
