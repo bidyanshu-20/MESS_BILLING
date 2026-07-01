@@ -38,7 +38,7 @@ io = new Server(server, {
 
 //  SOCKET CONNECTION
 io.on("connection", (socket) => {
-  console.log("User Connected:", socket.id);
+  // console.log("User Connected:", socket.id);
 
   socket.on("joinRoom", (userId) => {
     if (!mongoose.isValidObjectId(userId)) {
@@ -47,7 +47,7 @@ io.on("connection", (socket) => {
     }
 
     socket.join(userId);
-    console.log("Joined room:", userId);
+    // console.log("Joined room:", userId);
   });
 
   // new addition for chat event
@@ -171,7 +171,6 @@ app.use(express.json());
 
 
 
-// Define a route for the root URL ("/")
 app.get("/", (req, res) => {
   res.send("I am SERVER...");  // Send a response to the client
 });

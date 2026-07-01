@@ -29,6 +29,7 @@ const AdminDashboard = () => {
 
   const logout = () => {
     localStorage.removeItem("token");
+    localStorage.clear();
     window.location.href = "/";
   };
 
