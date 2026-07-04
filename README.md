@@ -30,7 +30,7 @@ Layer	Technology Used
 💻 Frontend	HTML, CSS, JavaScript / React
 ⚙️ Backend	Node.js, Express
 🗄️ Database	MongoDB / MySQL
-🔧 Tools	Git, VS Code
+🔧 Tools	Git, VS Code etc
 
 (Modify based on your actual stack)
 
