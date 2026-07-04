@@ -11,7 +11,7 @@ const AdminDashboard = () => {
   const navigate = useNavigate();
 
   const API_BASE = import.meta.env.VITE_BACKEND_URL;
-  console.log("AdminDashboard->", API_BASE);
+  // console.log("AdminDashboard->", API_BASE);
 
 
 

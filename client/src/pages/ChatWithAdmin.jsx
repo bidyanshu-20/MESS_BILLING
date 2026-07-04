@@ -41,7 +41,7 @@ const ChatWithAdmin = () => {
     
 
     const API_BASE = import.meta.env.VITE_BACKEND_URL;
-    console.log("ChatWithUser->", API_BASE);
+    // console.log("ChatWithUser->", API_BASE);
 
     
 
@@ -70,7 +70,7 @@ const ChatWithAdmin = () => {
             return;
         }
 
-        socket.current = io("http://localhost:3400");
+        socket.current = io("https://mess-billing.onrender.com");
         socket.current.on("connect_error", () => setError("Unable to connect to chat server"));
         socket.current.emit("joinRoom", userId);
 
