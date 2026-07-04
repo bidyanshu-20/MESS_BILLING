@@ -14,7 +14,7 @@ const AdminUserBill = () => {
   const [userId, setUserId] = useState(null);
 
   const API_BASE = import.meta.env.VITE_BACKEND_URL;
-  console.log("AdminUserBill->", API_BASE);
+  // console.log("AdminUserBill->", API_BASE);
 
 
 

@@ -20,8 +20,8 @@ const UserDashboard = () => {
   
   // / console.log("--signIN--")
   const API_BASE = import.meta.env.VITE_BACKEND_URL;
-  console.log("UserDashboard ->", API_BASE);
-  console.log("--------"); 
+  // console.log("UserDashboard ->", API_BASE);
+  // console.log("--------"); 
 
 
   const [selectedMonth, setSelectedMonth] = useState(
@@ -35,7 +35,7 @@ const UserDashboard = () => {
   const socket = useRef(null);
 
   useEffect(() => {
-    socket.current = io("http://localhost:3400");
+    socket.current = io("https://mess-billing.onrender.com");
 
     return () => {
       socket.current.disconnect();
