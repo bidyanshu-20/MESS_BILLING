@@ -164,7 +164,7 @@ const AdminUserBill = () => {
   const handleSaveEdit = async (dayId) => {
     try {
       const token = localStorage.getItem("token");
-
+      console.log("save Bill")
       const res = await fetch(
         `${API_BASE}/api/messbill/${savedBill._id}/${dayId}`,
         {
@@ -175,10 +175,11 @@ const AdminUserBill = () => {
           },
           body: JSON.stringify(editDay),
         }
+
       );
 
       const data = await res.json();
-
+      console.log("->",data);
       if (data.success) {
         alert("Day updated successfully");
 
