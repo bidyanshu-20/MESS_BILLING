@@ -16,7 +16,10 @@ const SignUp = () => {
     });
   };
   const navigate = useNavigate();
-
+  console.log("--signUP--")
+ const API_BASE = import.meta.env.VITE_BACKEND_URL;
+ console.log("->",API_BASE);
+ console.log("--------");
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.name || !formData.email || !formData.password || !formData.rollno ) {
