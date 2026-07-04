@@ -28,11 +28,12 @@ export let io;
 io = new Server(server, {
   maxHttpBufferSize: 6 * 1024 * 1024,
   cors: {
-    origin: "*",
-    methods: ["GET", "POST", "PUT"]
-  }
+    origin: "https://mess-billing.vercel.app",
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE"]
+  }  
 });
-
+// https://mess-billing.vercel.app/
 
 
 
@@ -166,7 +167,18 @@ io.on("connection", (socket) => {
 
 
 // const app = express();
-app.use(cors());
+// app.use(cors());
+
+app.use(cors({
+    origin: "https://mess-billing.vercel.app",
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"]
+}));
+
+
+
+
 app.use(express.json());
 
 

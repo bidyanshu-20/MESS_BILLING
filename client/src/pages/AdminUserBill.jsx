@@ -164,7 +164,7 @@ const AdminUserBill = () => {
   const handleSaveEdit = async (dayId) => {
     try {
       const token = localStorage.getItem("token");
-      console.log("save Bill")
+  
       const res = await fetch(
         `${API_BASE}/api/messbill/${savedBill._id}/${dayId}`,
         {
@@ -179,7 +179,7 @@ const AdminUserBill = () => {
       );
 
       const data = await res.json();
-      console.log("->",data);
+      // console.log("->",data);
       if (data.success) {
         alert("Day updated successfully");
 
@@ -194,6 +194,7 @@ const AdminUserBill = () => {
 
   const saveBill = async () => {
     try {
+      console.log("save Bill")
       const res = await fetch(`${API_BASE}/api/admin/messbill/${rollno}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
