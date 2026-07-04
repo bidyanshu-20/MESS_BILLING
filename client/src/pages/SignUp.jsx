@@ -20,7 +20,7 @@ const SignUp = () => {
 
 
   // console.log("--signUP--")
-  // const API_BASE = import.meta.env.VITE_BACKEND_URL;
+  const API_BASE = import.meta.env.VITE_BACKEND_URL;
   // console.log("->", API_BASE);
   // console.log("--------");
 
