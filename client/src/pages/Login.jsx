@@ -12,10 +12,10 @@ const Login = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  console.log("--signIN--")
-  const API_BASE = import.meta.env.VITE_BACKEND_URL;
-  console.log("->", API_BASE);
-  console.log("--------");
+  // console.log("--signIN--")
+  // const API_BASE = import.meta.env.VITE_BACKEND_URL;
+  // console.log("->", API_BASE);
+  // console.log("--------");
 
 
 
@@ -37,7 +37,7 @@ const Login = () => {
 
     setLoading(true);
     try {
-      const res = await fetch("/api/auth/signin", {
+      const res = await fetch(`${API_BASE}/api/auth/signin`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),

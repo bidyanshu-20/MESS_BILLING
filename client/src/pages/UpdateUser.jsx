@@ -12,9 +12,19 @@ function UpdateUser() {
     email: "",
     rollno: "",
   });
-
+  
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
+
+  // console.log("--UpDateUser--")
+  const API_BASE = import.meta.env.VITE_BACKEND_URL;
+  console.log("UpDateUser->", API_BASE);
+  // console.log("--------");
+
+
+
+
+
 
   // Fetch logged-in user data
   useEffect(() => {
@@ -206,10 +216,9 @@ function UpdateUser() {
                 className={`
                   flex-1 py-3 px-6 rounded-lg font-medium text-white
                   transition-all duration-200 flex items-center justify-center gap-2 shadow-lg
-                  ${
-                    submitting
-                      ? "bg-indigo-600/50 cursor-not-allowed shadow-none"
-                      : "bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 active:scale-[0.98] shadow-indigo-900/30 hover:shadow-indigo-700/50"
+                  ${submitting
+                    ? "bg-indigo-600/50 cursor-not-allowed shadow-none"
+                    : "bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 active:scale-[0.98] shadow-indigo-900/30 hover:shadow-indigo-700/50"
                   }
                 `}
               >
