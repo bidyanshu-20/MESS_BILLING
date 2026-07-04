@@ -35,6 +35,12 @@ const ChatWithUser = () => {
     const [openMenuId, setOpenMenuId] = useState(null);
     const [error, setError] = useState("");
 
+    const API_BASE = import.meta.env.VITE_BACKEND_URL;
+    console.log("ChatWithUser->", API_BASE);
+
+
+
+
     useEffect(() => {
         bottomRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [messages]);
@@ -42,7 +48,7 @@ const ChatWithUser = () => {
     useEffect(() => {
         if (!userId || userId === "undefined") return;
 
-        fetch(`/api/chat/user/${userId}`)
+        fetch(`${API_BASE}/api/chat/user/${userId}`)
             .then((res) => res.json())
             .then((data) => {
                 if (data.success) setStudent(data.user);
@@ -60,7 +66,7 @@ const ChatWithUser = () => {
         socket.current.on("connect_error", () => setError("Unable to connect to chat server"));
         socket.current.emit("joinRoom", userId);
 
-        fetch(`/api/chat/${admin._id}/${userId}`)
+        fetch(`${API_BASE}/api/chat/${admin._id}/${userId}`)
             .then((res) => res.json())
             .then((data) => {
                 if (data.success) setMessages(data.messages);

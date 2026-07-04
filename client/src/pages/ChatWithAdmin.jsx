@@ -31,14 +31,19 @@ const ChatWithAdmin = () => {
     const socket = useRef(null);
     const bottomRef = useRef(null);
     const fileInputRef = useRef(null);
-
+    
     const [message, setMessage] = useState("");
     const [messages, setMessages] = useState([]);
     const [admin, setAdmin] = useState(null);
     const [selectedFile, setSelectedFile] = useState(null);
     const [openMenuId, setOpenMenuId] = useState(null);
     const [error, setError] = useState("");
+    
 
+    const API_BASE = import.meta.env.VITE_BACKEND_URL;
+    console.log("ChatWithUser->", API_BASE);
+
+    
 
     useEffect(() => {
         bottomRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -46,7 +51,7 @@ const ChatWithAdmin = () => {
 
 
     useEffect(() => {
-        fetch("/api/chat/admin")
+        fetch(`${API_BASE}/api/chat/admin`)
             .then((res) => res.json())
             .then((data) => {
                 if (data.success) setAdmin(data.admin);
@@ -69,7 +74,7 @@ const ChatWithAdmin = () => {
         socket.current.on("connect_error", () => setError("Unable to connect to chat server"));
         socket.current.emit("joinRoom", userId);
 
-        fetch(`/api/chat/${userId}/${admin._id}`)
+        fetch(`${API_BASE}/api/chat/${userId}/${admin._id}`)
             .then((res) => res.json())
             .then((data) => {
                 if (data.success) setMessages(data.messages);

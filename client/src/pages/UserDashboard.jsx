@@ -46,7 +46,7 @@ const UserDashboard = () => {
     try {
       const token = localStorage.getItem("token");
 
-      const res = await fetch("/api/user/messbill", {
+      const res = await fetch(`${API_BASE}/api/user/messbill`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,

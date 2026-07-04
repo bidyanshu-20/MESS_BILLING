@@ -10,6 +10,12 @@ const ForgotPassword = () => {
   const [newPassword, setNewPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
+   const API_BASE = import.meta.env.VITE_BACKEND_URL;
+  console.log("ForgotPassword->", API_BASE);
+
+
+
+
   const sendOtp = async () => {
     if (!email) {
       toast.warning("Please enter your email");
@@ -17,7 +23,7 @@ const ForgotPassword = () => {
     }
     setLoading(true);
     try {
-      const res = await fetch("/api/auth/forgot-password", {
+      const res = await fetch(`${API_BASE}/api/auth/forgot-password`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
@@ -45,7 +51,7 @@ const ForgotPassword = () => {
     }
     setLoading(true);
     try {
-      const res = await fetch("/api/auth/verify-otp", {
+      const res = await fetch(`${API_BASE}/api/auth/verify-otp`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, otp }),
@@ -73,7 +79,7 @@ const ForgotPassword = () => {
     }
     setLoading(true);
     try {
-      const res = await fetch("/api/auth/reset-password", {
+      const res = await fetch(`${API_BASE}/api/auth/reset-password`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, otp, newPassword }),
