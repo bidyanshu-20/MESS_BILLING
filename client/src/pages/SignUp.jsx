@@ -16,13 +16,20 @@ const SignUp = () => {
     });
   };
   const navigate = useNavigate();
-  console.log("--signUP--")
- const API_BASE = import.meta.env.VITE_BACKEND_URL;
- console.log("->",API_BASE);
- console.log("--------");
+
+
+
+  // console.log("--signUP--")
+  // const API_BASE = import.meta.env.VITE_BACKEND_URL;
+  // console.log("->", API_BASE);
+  // console.log("--------");
+
+
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.name || !formData.email || !formData.password || !formData.rollno ) {
+    if (!formData.name || !formData.email || !formData.password || !formData.rollno) {
       toast.warning("Please fill all fields");
       return;
     }
@@ -30,7 +37,7 @@ const SignUp = () => {
       // console.log(formData);
       setLoading(true);
       // console.log("Data is submitted");
-      const res = await fetch("/api/auth/signup", {
+      const res = await fetch(`${API_BASE}/api/auth/signup`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
