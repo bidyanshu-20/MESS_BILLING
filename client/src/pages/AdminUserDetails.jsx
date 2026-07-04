@@ -9,12 +9,16 @@ const AdminUserDetails = () => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
 
+    const API_BASE = import.meta.env.VITE_BACKEND_URL;
+    console.log("AdminUserDetails->", API_BASE);
+
+
     const fetchBills = async () => {
         try {
             const token = localStorage.getItem("token");
 
             const res = await fetch(
-                `/api/admin/messbill/${rollno}`,
+                `${API_BASE}/api/admin/messbill/${rollno}`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -24,7 +28,7 @@ const AdminUserDetails = () => {
 
             const data = await res.json();
 
-            console.log("--->", data);
+            // console.log("--->", data);
             // console.log(rollno);
             if (data.success) {
                 setBills(data.bills);
@@ -52,7 +56,7 @@ const AdminUserDetails = () => {
             const token = localStorage.getItem("token");
 
             const res = await fetch(
-                `/api/bill/status/${billId}`,
+                `${API_BASE}/api/bill/status/${billId}`,
                 {
                     method: "PUT",
                     headers: {

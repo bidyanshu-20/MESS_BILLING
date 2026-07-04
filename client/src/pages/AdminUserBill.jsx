@@ -13,6 +13,10 @@ const AdminUserBill = () => {
   const [savedBill, setSavedBill] = useState(null);
   const [userId, setUserId] = useState(null);
 
+  const API_BASE = import.meta.env.VITE_BACKEND_URL;
+  console.log("AdminUserBill->", API_BASE);
+
+
 
   const [editIndex, setEditIndex] = useState(null);
   const [editDay, setEditDay] = useState({
@@ -67,7 +71,7 @@ const AdminUserBill = () => {
       const token = localStorage.getItem("token");
 
       const res = await fetch(
-        `/api/admin/messbill/${rollno}?month=${month}`,
+        `${API_BASE}/api/admin/messbill/${rollno}?month=${month}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -98,7 +102,7 @@ const AdminUserBill = () => {
       const token = localStorage.getItem("token");
 
       const res = await fetch(
-        `/api/messbill/month/${billId}`,
+        `${API_BASE}/api/messbill/month/${billId}`,
         {
           method: "DELETE",
           headers: {
@@ -125,7 +129,7 @@ const AdminUserBill = () => {
       const token = localStorage.getItem("token");
 
       const res = await fetch(
-        `/api/messbill/day/${savedBill._id}/${dayId}`,
+        `${API_BASE}/api/messbill/day/${savedBill._id}/${dayId}`,
         {
           method: "DELETE",
           headers: {
@@ -162,7 +166,7 @@ const AdminUserBill = () => {
       const token = localStorage.getItem("token");
 
       const res = await fetch(
-        `/api/messbill/${savedBill._id}/${dayId}`,
+        `${API_BASE}/api/messbill/${savedBill._id}/${dayId}`,
         {
           method: "PUT",
           headers: {
@@ -189,7 +193,7 @@ const AdminUserBill = () => {
 
   const saveBill = async () => {
     try {
-      const res = await fetch(`/api/admin/messbill/${rollno}`, {
+      const res = await fetch(`${API_BASE}/api/admin/messbill/${rollno}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",

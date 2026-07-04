@@ -10,10 +10,15 @@ const AdminDashboard = () => {
   const [search, setSearch] = useState("");
   const navigate = useNavigate();
 
+  const API_BASE = import.meta.env.VITE_BACKEND_URL;
+  console.log("AdminDashboard->", API_BASE);
+
+
+
   useEffect(() => {
     const token = localStorage.getItem("token");
 
-    fetch("/api/admin/users", {
+    fetch(`${API_BASE}/api/admin/users`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -37,7 +42,7 @@ const AdminDashboard = () => {
     try {
       const token = localStorage.getItem("token");
 
-      const response = await fetch(`/api/auth/admin/delete/user/${userId}`, {
+      const response = await fetch(`${API_BASE}/api/auth/admin/delete/user/${userId}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,
