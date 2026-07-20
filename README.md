@@ -54,6 +54,8 @@ npm install
 npm start
 📸 Screenshots
 
+LIVE HOASTED URLS FOR THIS PROJECT :
+https://mess-billing.vercel.app/  
 ## 📸 Screenshot
 
 ![Mess Billing Project](./client/src/assets/p1.png)
