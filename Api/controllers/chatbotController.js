@@ -88,11 +88,22 @@ export const askChatbot = async (req, res) => {
         });
 
     } catch (error) {
-        console.error("Chatbot Error:->", error);
+        console.error("========== CHATBOT ERROR ==========");
+
+        console.error("Message:", error.message);
+        console.error("Status:", error.status);
+        console.error("Code:", error.code);
+        console.error("Type:", error.type);
+        console.error("Request ID:", error.requestID);
+
+        console.error("Full Error:", error);
+
+        console.error("===================================");
 
         return res.status(500).json({
             success: false,
-            message: "Something went wrong with the AI assistant."
+            message: "Chatbot failed",
+            error: error.message
         });
     }
 };
