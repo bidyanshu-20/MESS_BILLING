@@ -3,6 +3,8 @@ import openai from "../services/openaiService.js";
 import messBill from "../models/messBilling.model.js";
 
 export const askChatbot = async (req, res) => {
+    let stage = "validation";
+
     try {
         const { message, month, history = [] } = req.body;
 
@@ -10,6 +12,14 @@ export const askChatbot = async (req, res) => {
             return res.status(400).json({
                 success: false,
                 message: "Please enter a question."
+            });
+        }
+
+        const question = message.trim();
+        if (/^(hi|hello|hey|hiya|good morning|good afternoon|good evening)[!?.\s]*$/i.test(question)) {
+            return res.status(200).json({
+                success: true,
+                answer: "Hi! I can help with your mess bill, meal history, and payment status. What would you like to know?"
             });
         }
 
@@ -29,6 +39,8 @@ export const askChatbot = async (req, res) => {
 
         const recentHistory = history
             .filter((entry) =>
+                entry !== null &&
+                typeof entry === "object" &&
                 (entry?.role === "user" || entry?.role === "assistant") &&
                 typeof entry.content === "string" &&
                 entry.content.trim()
@@ -42,6 +54,7 @@ export const askChatbot = async (req, res) => {
         const userId = req.user._id;
         let bill;
 
+        stage = "billing lookup";
         if (month) {
             bill = await messBill.findOne({
                 user: userId,
@@ -70,6 +83,7 @@ export const askChatbot = async (req, res) => {
             };
         }
 
+        stage = "AI response";
         const systemPrompt = `
             You are an AI Mess Assistant for a college mess billing system.
 
@@ -95,7 +109,11 @@ export const askChatbot = async (req, res) => {
 
         const answer = response.output_text?.trim();
         if (!answer) {
-            throw new Error("The AI assistant returned an empty response.");
+            console.error("Chatbot returned an empty AI response.");
+            return res.status(503).json({
+                success: false,
+                message: "The AI assistant returned an empty response. Please try again."
+            });
         }
 
         return res.status(200).json({
@@ -104,11 +122,38 @@ export const askChatbot = async (req, res) => {
         });
 
     } catch (error) {
-        console.error("Chatbot Error:->", error);
+        console.error("Chatbot request failed:", {
+            stage,
+            name: error?.name,
+            message: error?.message,
+            status: error?.status,
+            code: error?.code
+        });
 
-        return res.status(500).json({
+        if (stage === "AI response" && (error?.status === 401 || error?.status === 403)) {
+            return res.status(503).json({
+                success: false,
+                message: "The AI assistant is not configured correctly. Please contact support."
+            });
+        }
+
+        if (stage === "AI response" && error?.status === 429) {
+            return res.status(503).json({
+                success: false,
+                message: "The AI assistant is busy right now. Please try again shortly."
+            });
+        }
+
+        if (stage === "billing lookup") {
+            return res.status(503).json({
+                success: false,
+                message: "Could not load your billing information. Please try again."
+            });
+        }
+
+        return res.status(503).json({
             success: false,
-            message: "Something went wrong with the AI assistant."
+            message: "The AI assistant is temporarily unavailable. Please try again."
         });
     }
 };
