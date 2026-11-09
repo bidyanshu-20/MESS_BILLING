@@ -23,7 +23,7 @@ const UserDashboard = () => {
   // console.log("UserDashboard ->", API_BASE);
   // console.log("--------"); 
 
-
+ 
   const [selectedMonth, setSelectedMonth] = useState(
     (currentDate.getMonth() + 1)
       .toString()
@@ -352,6 +352,7 @@ const UserDashboard = () => {
 
           Loading your bills...
         </div>
+        <Chatbot />
       </div>
     );
   }
@@ -360,6 +361,7 @@ const UserDashboard = () => {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-950 to-indigo-950 flex items-center justify-center text-red-400 text-xl">
         {error}
+        <Chatbot />
       </div>
     );
   }
@@ -769,8 +771,8 @@ const UserDashboard = () => {
             )}
           </div>
         </div>
-        <Chatbot/>
       </main>
+      <Chatbot />
     </div>
   );
 };
