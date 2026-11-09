@@ -10,7 +10,7 @@ const Chatbot = () => {
             content: "Hello! I am your Mess AI Assistant. How can I help you?"
         }
     ]);
-
+    const API_BASE = import.meta.env.VITE_BACKEND_URL;
     const [input, setInput] = useState("");
     const [loading, setLoading] = useState(false);
 
@@ -35,7 +35,7 @@ const Chatbot = () => {
             const token = localStorage.getItem("token");
 
             const response = await axios.post(
-                "/api/chatbot/ask",
+                `${API_BASE}/api/chatbot/ask`,
                 {
                     message: userMessage
                 },
@@ -115,18 +115,16 @@ const Chatbot = () => {
                         {messages.map((msg, index) => (
                             <div
                                 key={index}
-                                className={`flex ${
-                                    msg.role === "user"
-                                        ? "justify-end"
-                                        : "justify-start"
-                                }`}
+                                className={`flex ${msg.role === "user"
+                                    ? "justify-end"
+                                    : "justify-start"
+                                    }`}
                             >
                                 <div
-                                    className={`p-3 rounded-lg max-w-[85%] text-sm ${
-                                        msg.role === "user"
-                                            ? "bg-green-600 text-white"
-                                            : "bg-gray-100 text-gray-800"
-                                    }`}
+                                    className={`p-3 rounded-lg max-w-[85%] text-sm ${msg.role === "user"
+                                        ? "bg-green-600 text-white"
+                                        : "bg-gray-100 text-gray-800"
+                                        }`}
                                 >
                                     {msg.content}
                                 </div>
@@ -152,7 +150,7 @@ const Chatbot = () => {
                             }}
                             placeholder="Ask something..."
                             className="flex-1 border rounded-lg
-                            px-3 py-2 outline-none text-sm"
+                            px-3 py-2 text-black  outline-none text-sm"
                         />
 
                         <button
