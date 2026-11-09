@@ -11,9 +11,23 @@ import Message from './models/messageSchema.js';
 import User from './models/user.model.js';
 import cors from 'cors'
 import dotenv from "dotenv";
+import path from "path";
+import { fileURLToPath } from "url";
 import { Server } from "socket.io";
 import { createServer } from "node:http";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+dotenv.config({ path: path.resolve(__dirname, ".env") });
 dotenv.config();
+
+const allowedOrigins = [
+  "https://mess-billing.vercel.app",
+  "http://localhost:5173",
+  "http://localhost:3000",
+  "http://127.0.0.1:5173",
+  "http://localhost:5174"
+];
 
 
 
@@ -29,7 +43,13 @@ export let io;
 io = new Server(server, {
   maxHttpBufferSize: 6 * 1024 * 1024,
   cors: {
-    origin: "https://mess-billing.vercel.app",
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin) || origin.endsWith(".vercel.app")) {
+        callback(null, true);
+      } else {
+        callback(null, origin);
+      }
+    },
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE"]
   }  
@@ -171,7 +191,13 @@ io.on("connection", (socket) => {
 // app.use(cors());
 
 app.use(cors({
-    origin: "https://mess-billing.vercel.app",
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin) || origin.endsWith(".vercel.app")) {
+        callback(null, true);
+      } else {
+        callback(null, origin);
+      }
+    },
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"]
