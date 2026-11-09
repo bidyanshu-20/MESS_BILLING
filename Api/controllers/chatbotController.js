@@ -88,7 +88,7 @@ export const askChatbot = async (req, res) => {
         });
 
     } catch (error) {
-        console.error("Chatbot Error:", error);
+        console.error("Chatbot Error:->", error);
 
         return res.status(500).json({
             success: false,
