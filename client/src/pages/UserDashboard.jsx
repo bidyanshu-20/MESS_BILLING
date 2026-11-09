@@ -4,7 +4,7 @@ import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { io } from "socket.io-client";
 import { useRef } from "react";
-
+import Chatbot from "../components/chatbot/Chatbot";
 const UserDashboard = () => {
   const [bills, setBills] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -769,6 +769,7 @@ const UserDashboard = () => {
             )}
           </div>
         </div>
+        <Chatbot/>
       </main>
     </div>
   );

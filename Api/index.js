@@ -5,6 +5,7 @@ import authRouter from './routes/auth.route.js';
 import billingRouter from "./routes/messbill.route.js";
 import messdataRouter from './routes/messdata.route.js';
 import chatRoutes from "./routes/chat.route.js";
+import chatbotRoutes from "./routes/chatboat.route.js";
 import getBillforAdminRouter from './routes/getbillForAdmin.route.js'
 import Message from './models/messageSchema.js';
 import User from './models/user.model.js';
@@ -193,6 +194,9 @@ app.use('/api', billingRouter);
 app.use('/api', messdataRouter);
 app.use('/api/admin', getBillforAdminRouter);
 app.use("/api/chat",chatRoutes);
+app.use("/api/chatbot",chatbotRoutes);
+
+
 
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;

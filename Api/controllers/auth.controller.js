@@ -208,7 +208,7 @@ export const adminDeleteUser = async (req, res) => {
 
 export const handleForgotpassword = async (req, res) => {
     const { email } = req.body;
-    console.log("---->"+email);
+    console.log("---->" + email);
     try {
         const user = await User.findOne({ email });
         if (!user) {
@@ -230,7 +230,7 @@ export const handleForgotpassword = async (req, res) => {
         res.status(200).json({ message: "Otp sent your email" });
     }
     catch (error) {
-         console.error("Forgot Password Error:", error);
+        console.error("Forgot Password Error:", error);
         res.status(500).json({ success: false, message: "Internal server Error..." })
     }
 }
