@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-const Chatbot = () => {
+const Chatbot = ({ month }) => {
     const [isOpen, setIsOpen] = useState(false);
 
     const [messages, setMessages] = useState([
@@ -37,7 +37,12 @@ const Chatbot = () => {
             const response = await axios.post(
                 `${API_BASE}/api/chatbot/ask`,
                 {
-                    message: userMessage
+                    message: userMessage,
+                    month,
+                    history: messages
+                        .slice(1)
+                        .slice(-10)
+                        .map(({ role, content }) => ({ role, content }))
                 },
                 {
                     headers: {
@@ -46,7 +51,10 @@ const Chatbot = () => {
                 }
             );
 
-            // Display AI response
+            if (!response.data.success || typeof response.data.answer !== "string") {
+                throw new Error(response.data.message || "The AI assistant returned an invalid response.");
+            }
+
             setMessages(prev => [
                 ...prev,
                 {
@@ -62,7 +70,8 @@ const Chatbot = () => {
                 ...prev,
                 {
                     role: "assistant",
-                    content: "Sorry, something went wrong. Please try again."
+                    content: error.response?.data?.message ||
+                        "Sorry, something went wrong. Please try again."
                 }
             ]);
 

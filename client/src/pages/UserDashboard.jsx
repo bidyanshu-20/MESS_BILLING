@@ -323,6 +323,7 @@ const UserDashboard = () => {
       month === selectedMonth
     );
   });
+  const chatbotMonth = `${selectedYear}-${selectedMonth}`;
 
 
   if (loading) {
@@ -352,7 +353,7 @@ const UserDashboard = () => {
 
           Loading your bills...
         </div>
-        <Chatbot />
+        <Chatbot month={chatbotMonth} />
       </div>
     );
   }
@@ -361,7 +362,7 @@ const UserDashboard = () => {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-950 to-indigo-950 flex items-center justify-center text-red-400 text-xl">
         {error}
-        <Chatbot />
+        <Chatbot month={chatbotMonth} />
       </div>
     );
   }
@@ -773,7 +774,7 @@ const UserDashboard = () => {
         </div>
       </main>
       <h1>Hello Prachi </h1>
-      <Chatbot />
+      <Chatbot month={chatbotMonth} />
     </div>
   );
 };
