@@ -5,7 +5,7 @@ import messBill from "../models/messBilling.model.js";
 export const askChatbot = async (req, res) => {
     try {
         const { message, month } = req.body;
-
+        console.log("Hellloooo");
         // 1. Validate user message
         if (!message || !message.trim()) {
             return res.status(400).json({
