@@ -5,6 +5,6 @@ import verifyUser from '../controllers/auth.middleware.js';
 
 const router = express.Router();
 
-router.post("/ask", verifyUser, askChatbot);
 
+router.post("/ask", verifyUser, askChatbot);
 export default router;

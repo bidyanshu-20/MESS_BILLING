@@ -195,6 +195,8 @@ app.use('/api', messdataRouter);
 app.use('/api/admin', getBillforAdminRouter);
 app.use("/api/chat",chatRoutes);
 app.use("/api/chatbot",chatbotRoutes);
+// ${API_BASE}/api/chatbot/ask
+
 
 
 
